@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SIVYIS Corp — Cosmoly &amp; Loadline</title>
-<meta name="description" content="SIVYIS Corp builds Cosmoly, a galaxy-style music app with Bitcoin tipping, and Loadline, a public map and education hub for Bitcoin mining and the power grid.">
-<meta property="og:title" content="SIVYIS Corp"><meta property="og:description" content="SIVYIS Corp — one mission, many branches. Cosmoly, Loadline and more to come.">
+<title>SIVYIS Corp — Everything moves in cycles</title>
+<meta name="description" content="SIVYIS Corp is a company built on one idea: the universe is connected through cycles, vibrations, frequencies and epochs. Branches: Cosmoly, Loadline and Kun-Yuh.">
+<meta property="og:title" content="SIVYIS Corp — Everything moves in cycles"><meta property="og:description" content="One big mission, many branches: Cosmoly (sound), Loadline (energy), Kun-Yuh (story).">
 <meta name="theme-color" content="#05060d">
 <style>
 :root{--bg:#05060d;--ink:#e8ebf7;--mute:#9aa3c0;--line:rgba(255,255,255,.1);--amber:#f5a623;--cy:#5ee1ff;--pk:#ff6ad5}
@@ -53,53 +53,91 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--mute);font-si
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 @media(max-width:800px){.about,.cards{grid-template-columns:1fr}.hero{padding:80px 0 50px}nav a:nth-child(n+3){display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+
+.hero{position:relative;padding:110px 0 100px;min-height:78vh;display:flex;align-items:center}
+.hero .txt{position:relative;z-index:1;max-width:660px}
+.rings{position:absolute;right:-8%;top:50%;width:min(720px,92vw);aspect-ratio:1;transform:translateY(-50%);z-index:0;opacity:.9;pointer-events:none}
+.rings svg{width:100%;height:100%;overflow:visible}
+.rg{transform-origin:300px 300px;animation:spin linear infinite}
+.r1{animation-duration:90s}.r2{animation-duration:140s;animation-direction:reverse}.r3{animation-duration:220s}
+.pulse{transform-origin:300px 300px;animation:pulse 8s ease-out infinite;opacity:0}
+.p2{animation-delay:2.67s}.p3{animation-delay:5.33s}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%{transform:scale(.1);opacity:.55}100%{transform:scale(1);opacity:0}}
+.about{grid-template-columns:1.2fr 1fr}
+.cyc{list-style:none;margin:30px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:c}
+.cyc li{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.03);position:relative}
+.cyc b{display:block;font-size:17px;margin-bottom:2px}
+.cyc small{display:block;color:var(--cy);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.cyc span{color:var(--mute);font-size:14px}
+.scale{display:flex;justify-content:space-between;color:var(--mute);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-top:26px;border-top:1px solid var(--line);padding-top:8px;background:none}
+.note{color:var(--mute);font-size:13px;margin-top:16px}
+.quote{font-size:clamp(20px,3vw,28px);line-height:1.4;max-width:820px;color:var(--ink)}
+.quote em{color:var(--amber);font-style:normal}
+.cards{grid-template-columns:repeat(3,1fr)}
+.card.kun:hover{border-color:var(--cy)}
+.kun h3{color:#ffd9a0}
+.card .art{height:150px;border-bottom:1px solid var(--line);display:block;width:100%}
+@media(max-width:900px){.cards,.cyc{grid-template-columns:1fr}.rings{right:-30%;opacity:.55}.hero{min-height:0}}
+@media(prefers-reduced-motion:reduce){.rg,.pulse{animation:none!important}.pulse{opacity:.12;transform:scale(.6)}.p2{transform:scale(.8)}.p3{transform:scale(1)}}
 </style></head><body>
 <canvas id="sky" aria-hidden="true"></canvas>
 <header><div class="wrap"><a class="brand" href="#top">S<i>◆</i>VYIS</a>
-<nav><a href="#about">About</a><a href="#products">Products</a><a href="#contact">Contact</a></nav></div></header>
+<nav><a href="#vision">Vision</a><a href="#cycles">Cycles</a><a href="#branches">Branches</a><a href="#contact">Contact</a></nav></div></header>
 <main id="top">
-<div class="wrap hero">
-<div class="eyebrow">SIVYIS Corp</div>
-<h1>Building new <span>infrastructure</span> for music and energy.</h1>
-<p class="lead">SIVYIS Corp is a parent company with one big mission and many branches. Today that includes early-stage work on a galaxy you can fly through to discover music, and a public map that explains how Bitcoin mining meets the power grid.</p>
-<div class="btns"><a class="btn p" href="#products">See our products</a><a class="btn" href="#about">About SIVYIS</a></div>
+<div class="wrap hero"><div class="rings" aria-hidden="true"><svg viewBox="0 0 600 600" fill="none"><circle class="pulse" cx="300" cy="300" r="290" stroke="#5ee1ff" stroke-width="1.5"/><circle class="pulse p2" cx="300" cy="300" r="290" stroke="#ff6ad5" stroke-width="1.5"/><circle class="pulse p3" cx="300" cy="300" r="290" stroke="#f5a623" stroke-width="1.5"/><g class="rg r1"><circle cx="300" cy="300" r="90" stroke="#5ee1ff" stroke-opacity=".45" stroke-dasharray="2 7"/><circle cx="368.9" cy="357.9" r="5" fill="#5ee1ff"/></g><g class="rg r2"><circle cx="300" cy="300" r="160" stroke="#ff6ad5" stroke-opacity=".45" stroke-dasharray="1 9"/><circle cx="149.6" cy="245.3" r="6" fill="#ff6ad5"/></g><g class="rg r3"><circle cx="300" cy="300" r="235" stroke="#f5a623" stroke-opacity=".45"/><circle cx="451.1" cy="120.0" r="7" fill="#f5a623"/></g><g class="rg r1"><circle cx="300" cy="300" r="285" stroke="#9aa3c0" stroke-opacity=".45" stroke-dasharray="1 14"/><circle cx="157.5" cy="546.8" r="4" fill="#9aa3c0"/></g><circle cx="300" cy="300" r="6" fill="#e5383b"/></svg></div>
+<div class="txt"><div class="eyebrow">SIVYIS Corp</div>
+<h1>Everything moves in <span>cycles.</span></h1>
+<p class="lead">From a heartbeat to a galaxy, the universe is held together by vibrations, frequencies and epochs, small and vast, all connected. SIVYIS is a company built on one idea: learn to play those cycles well, and the quality of everything can improve.</p>
+<div class="btns"><a class="btn p" href="#vision">Our vision</a><a class="btn" href="#branches">The branches</a></div></div>
 </div>
 
-<section id="about"><div class="wrap about">
-<div><div class="eyebrow">About</div><h2>One big mission, many branches.</h2>
-<p>SIVYIS began with a question: <em>what is music worth to you?</em> That became Cosmoly — an infinite 3D universe where every star is an artist, and fans can support them directly with Bitcoin.</p>
-<p>The same thinking applies to energy. Large flexible loads such as Bitcoin miners are reshaping how grids are run, and public understanding lags behind. Loadline exists to explain it with sources, not slogans.</p>
-<p>Each branch is a different way of pursuing the same mission, and there is room for more. Founded by Txai Xiong. Current branches are in active development.</p></div>
+<section id="vision"><div class="wrap about">
+<div><div class="eyebrow">Vision</div><h2>The shaman and the instrument.</h2>
+<p class="quote">We think of SIVYIS as a <em>shaman</em> playing the vibrations, energy and power cycles of the world like an instrument, casting a healing spell to heal the universe.</p>
+<p>That is our philosophy and our metaphor, not a claim of supernatural powers. In practice it means paying close, honest attention to cycles of sound, energy and story, and building tools that make them easier to understand and to care for.</p>
+<p>One big mission, many branches. Founded by Txai Xiong. Every branch is early-stage.</p></div>
 <div class="facts"><ul>
-<li><b>Cosmoly</b> — music discovery &amp; artist support (public demo)</li>
-<li><b>Loadline</b> — grid &amp; Bitcoin-mining education and transparency (draft)</li>
-<li><b>Kun-Yuh</b> — Hmong cultural sticker-book company (coming soon)</li>
+<li><b>Vibration</b> — sound, signal and rhythm are patterns that repeat</li>
+<li><b>Frequency</b> — how often a cycle returns, from hertz to millennia</li>
+<li><b>Epoch</b> — the long ages in which small cycles are nested</li>
 <li><b>Approach</b> — show the receipts, label what is a demo, cite sources</li></ul></div>
 </div></section>
 
-<section id="products"><div class="wrap">
-<div class="eyebrow">Branches</div><h2>What we're building</h2>
+<section id="cycles"><div class="wrap">
+<div class="eyebrow">Cycles</div><h2>Small to huge, one pattern.</h2>
+<p style="color:var(--mute);max-width:640px;margin:0">Nested rhythms we can all recognize, from the body to the cosmos.</p>
+<ol class="cyc"><li><small>Heartbeat</small><b>About a second</b><span>A resting adult heart beats roughly 60–100 times a minute.</span></li><li><small>Breath</small><b>A few seconds</b><span>A resting adult breathes about 12–20 times a minute.</span></li><li><small>Day</small><b>24 hours</b><span>Earth turns once on its axis, giving us day and night.</span></li><li><small>Tides</small><b>About 12.4 hours</b><span>On many coasts the sea rises and falls twice a day, pulled by the Moon and Sun.</span></li><li><small>Grid load</small><b>Daily &amp; seasonal</b><span>Electricity demand rises and falls with the day and the seasons, and grids hold a steady frequency: 60 Hz in North America, 50 Hz in much of the world.</span></li><li><small>Seasons</small><b>One year</b><span>Earth’s axial tilt, about 23.4°, and its orbit around the Sun bring the seasons.</span></li><li><small>Solar cycle</small><b>About 11 years</b><span>Sunspot activity swells and fades roughly every 11 years.</span></li><li><small>Epochs</small><b>Thousands of years</b><span>We live in the Holocene, which began about 11,700 years ago. Earth itself is about 4.5 billion years old.</span></li><li><small>Galactic year</small><b>~225–250 million years</b><span>About how long the Sun takes to orbit the center of the Milky Way.</span></li></ol>
+<div class="scale" aria-hidden="true"><span>Tiny · seconds</span><span>Huge · millions of years</span></div>
+<p class="note">Figures are approximate, typical values from standard science references.</p>
+</div></section>
+
+<section id="branches"><div class="wrap">
+<div class="eyebrow">Branches</div><h2>Three ways of playing the cycles</h2>
 <div class="cards">
 <article class="card cos"><img src="assets/cosmoly.png" alt="Cosmoly entry screen" loading="lazy" width="1280" height="800">
-<div class="b"><span class="tag">Music · Demo</span><h3>Cosmoly</h3>
-<p>A galaxy-style music app. Fly through genre clusters, tap a star to open an artist profile, and explore music history and philosophy.</p>
-<ul><li>3D galaxy of genres and artists</li><li>Artist profiles, store and merch links</li><li>Bitcoin wallet and tipping, as a demo</li></ul>
-<div class="honest">Honest status: a public demo. The wallet is simulated and stored on your device only; audio is generated in-browser and artists are sample content. Not a streaming service yet.</div>
+<div class="b"><span class="tag">Sound &amp; cosmos · Demo</span><h3>Cosmoly</h3>
+<p>The cycle of sound. A galaxy-style music app: fly through genre clusters, tap a star to open an artist, and explore music history and philosophy.</p>
+<div class="honest">Honest status: a public demo. The wallet is simulated and stored on your device only; audio is generated in-browser and artists are sample content. Not a streaming service.</div>
 <div class="btns"><a class="btn c" href="https://casblu.github.io/galaxy-music-app/" target="_blank" rel="noopener">Open the demo ↗</a></div></div></article>
 
 <article class="card load"><img src="assets/loadline.png" alt="Loadline home page" loading="lazy" width="1280" height="800">
-<div class="b"><span class="tag">Energy · Draft v0.1</span><h3>Load<em>line</em></h3>
-<p>A neutral map and education hub on Bitcoin mining and the power grid, built so utilities, miners and the public can argue from the same numbers.</p>
-<ul><li>Interactive map of Texas with US context</li><li>Explainers with a sources list for every figure</li><li>Data-center transparency dashboard: water, electricity, compute</li></ul>
-<div class="honest">Honest status: a draft. Data is sourced from public filings and studies and is still being expanded; data-center scores are not final.</div>
+<div class="b"><span class="tag">Energy &amp; power · Draft v0.1</span><h3>Load<em>line</em></h3>
+<p>The cycle of power. A neutral map and education hub on Bitcoin mining and the grid, with transparency on data-center water, electricity and compute.</p>
+<div class="honest">Honest status: a draft. Data comes from public filings and studies and is still expanding; data-center scores are not final.</div>
 <div class="btns"><a class="btn p" href="https://casblu.github.io/loadline-site/" target="_blank" rel="noopener">Open Loadline ↗</a><a class="btn" href="https://casblu.github.io/loadline-site/data-centers.html" target="_blank" rel="noopener">Data centers ↗</a></div></div></article>
+
+<article class="card kun"><svg class="art" viewBox="0 0 300 150" role="img" aria-label="Concentric diamond pattern inspired by textile designs"><rect width="300" height="150" fill="#0e1020"/><g fill="none" stroke="#f5a623" stroke-opacity=".7"><path d="M150 15 L225 75 L150 135 L75 75Z"/><path d="M150 38 L200 75 L150 112 L100 75Z" stroke="#ff6ad5"/><path d="M150 58 L175 75 L150 92 L125 75Z" stroke="#5ee1ff"/></g></svg>
+<div class="b"><span class="tag">Culture &amp; story · Coming soon</span><h3>Kun-Yuh</h3>
+<p>The cycle of stories passed down. A planned Hmong cultural sticker book for kids and families: dress-up with stickers, textile designs to draw, and stories to hear and tell.</p>
+<div class="honest">Honest status: an idea in early planning, to be developed with Hmong community members. No product yet.</div></div></article>
 </div></div></section>
 
 <section id="contact"><div class="wrap contact"><div class="eyebrow">Contact</div><h2>Get in touch</h2>
 <p>Artists, grid operators, miners, researchers and press — we'd like to hear from you.</p>
 <div class="box">Contact details coming soon.</div></div></section>
 </main>
-<footer><div class="wrap"><span>© 2026 SIVYIS Corp</span><span>Cosmoly and Loadline are early-stage products. Demo content is illustrative.</span></div></footer>
+<footer><div class="wrap"><span>© 2026 SIVYIS Corp</span><span>All branches are early-stage. The shaman language is metaphor. Demo content is illustrative.</span></div></footer>
 <script>
 (function(){var c=document.getElementById('sky'),x=c.getContext('2d'),s=[],W,H,d=Math.min(devicePixelRatio||1,2);
 function r(){W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0);s=[];for(var i=0;i<Math.round(W*H/7000);i++)s.push({x:Math.random()*W,y:Math.random()*H,z:Math.random()*1.2+.2,p:Math.random()*6.28,h:[200,320,40,0][i%4]})}
