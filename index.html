@@ -64,7 +64,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .p2{animation-delay:2.67s}.p3{animation-delay:5.33s}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%{transform:scale(.1);opacity:.55}100%{transform:scale(1);opacity:0}}
-.about{grid-template-columns:1.2fr 1fr}
+
 .cyc{list-style:none;margin:30px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:c}
 .cyc li{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.03);position:relative}
 .cyc b{display:block;font-size:17px;margin-bottom:2px}
@@ -78,7 +78,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .card.kun:hover{border-color:var(--cy)}
 .kun h3{color:#ffd9a0}
 .card .art{height:150px;border-bottom:1px solid var(--line);display:block;width:100%}
-@media(max-width:900px){.cards,.cyc{grid-template-columns:1fr}.rings{right:-30%;opacity:.55}.hero{min-height:0}}
+@media(max-width:900px){.about,.cards,.cyc{grid-template-columns:1fr}.rings{right:-30%;opacity:.55}.hero{min-height:0}}
 @media(prefers-reduced-motion:reduce){.rg,.pulse{animation:none!important}.pulse{opacity:.12;transform:scale(.6)}.p2{transform:scale(.8)}.p3{transform:scale(1)}}
 </style></head><body>
 <canvas id="sky" aria-hidden="true"></canvas>
