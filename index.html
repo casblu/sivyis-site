@@ -53,6 +53,7 @@ h2{font-size:clamp(26px,4vw,38px);margin:8px 0 16px;letter-spacing:-.01em}
 footer{border-top:1px solid var(--line);padding:30px 0;color:var(--mute);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 @media(max-width:800px){.about,.cards{grid-template-columns:1fr}.hero{padding:80px 0 50px}nav a:nth-child(-n+2){display:none}}
+@media(max-width:560px){nav a:nth-child(-n+4){display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
 
 .hero{position:relative;padding:110px 22px 100px;min-height:78vh;display:flex;align-items:center}
@@ -84,11 +85,12 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .card .art{height:auto;aspect-ratio:16/10;border-bottom:1px solid var(--line);display:block;width:100%}
 @media(max-width:560px){nav a{margin-left:14px;font-size:13px}.brand{letter-spacing:.2em}}
 @media(max-width:900px){.about,.cards,.cyc,.svc{grid-template-columns:1fr}.rings{right:-30%;opacity:.55}.hero{min-height:0}}
+@media(max-width:560px){nav a:nth-child(-n+4){display:none}}
 @media(prefers-reduced-motion:reduce){.rg,.pulse{animation:none!important}.pulse{opacity:.12;transform:scale(.6)}.p2{transform:scale(.8)}.p3{transform:scale(1)}}
 </style></head><body>
 <canvas id="sky" aria-hidden="true"></canvas>
 <header><div class="wrap"><a class="brand" href="#top">S<i>◆</i>VYIS</a>
-<nav><a href="#vision">Vision</a><a href="#cycles">Cycles</a><a href="#branches">Branches</a><a href="#sonification">Sonification</a><a href="#contact">Contact</a></nav></div></header>
+<nav><a href="#vision">Vision</a><a href="#cycles">Cycles</a><a href="#branches">Branches</a><a href="#sonification">Sonification</a><a href="#giving">Giving back</a><a href="#contact">Contact</a></nav></div></header>
 <main id="top">
 <div class="wrap hero"><div class="rings" aria-hidden="true"><svg viewBox="0 0 600 600" fill="none"><circle class="pulse" cx="300" cy="300" r="290" stroke="#5ee1ff" stroke-width="1.5"/><circle class="pulse p2" cx="300" cy="300" r="290" stroke="#ff6ad5" stroke-width="1.5"/><circle class="pulse p3" cx="300" cy="300" r="290" stroke="#f5a623" stroke-width="1.5"/><g class="rg r1"><circle cx="300" cy="300" r="90" stroke="#5ee1ff" stroke-opacity=".45" stroke-dasharray="2 7"/><circle cx="368.9" cy="357.9" r="5" fill="#5ee1ff"/></g><g class="rg r2"><circle cx="300" cy="300" r="160" stroke="#ff6ad5" stroke-opacity=".45" stroke-dasharray="1 9"/><circle cx="149.6" cy="245.3" r="6" fill="#ff6ad5"/></g><g class="rg r3"><circle cx="300" cy="300" r="235" stroke="#f5a623" stroke-opacity=".45"/><circle cx="451.1" cy="120.0" r="7" fill="#f5a623"/></g><g class="rg r1"><circle cx="300" cy="300" r="285" stroke="#9aa3c0" stroke-opacity=".45" stroke-dasharray="1 14"/><circle cx="157.5" cy="546.8" r="4" fill="#9aa3c0"/></g><circle cx="300" cy="300" r="6" fill="#e5383b"/></svg></div>
 <div class="txt"><div class="eyebrow">SIVYIS Corp</div>
@@ -161,12 +163,27 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 <p class="note">Paid services are not yet offered at set terms: no prices are listed. Use the contact section to inquire. Sound is a way to explore data, not a replacement for measurement or safety systems.</p>
 </div></section>
 
+<section id="giving"><div class="wrap about">
+<div><div class="eyebrow">Giving back</div><h2>Bomb-free land in Laos.</h2>
+<p>SIVYIS Corp pledges <b style="color:var(--amber)"><span class="give-pct">5%</span> of profits</b> from every product — Cosmoly, Loadline, SIVYIS Sonify, Kun-Yuh and every future brand — to <a href="https://legaciesofwar.org" target="_blank" rel="noopener">Legacies of War</a>.</p>
+<p>Legacies of War is a Lao American and women-led movement advocating for families in Laos, Cambodia and Vietnam to live on bomb-free land, free of the unexploded ordnance (UXO) left by U.S. bombing during the Vietnam War era.</p>
+<div class="btns"><a class="btn p" href="https://legaciesofwar.org" target="_blank" rel="noopener">Visit Legacies of War ↗</a></div></div>
+<div class="facts"><ul>
+<li><b>1964–1973:</b> the U.S. dropped over two million tons of ordnance on Laos in 580,000 bombing sorties.</li>
+<li><b>270 million+</b> cluster munitions were dropped on Laos; about 30% failed to detonate.</li>
+<li><b>Most bombed country per capita</b> in history: Laos.</li>
+<li><b>Only about 10%</b> of UXO in Laos has been cleared.</li>
+</ul><p class="honest" style="margin:14px 0 0">Source: <a href="https://legaciesofwar.org" target="_blank" rel="noopener">legaciesofwar.org</a>, accessed Oct 19, 2026. The pledge applies to profits as they are earned; SIVYIS Corp is not affiliated with Legacies of War.</p></div>
+</div></section>
+
 <section id="contact"><div class="wrap contact"><div class="eyebrow">Contact</div><h2>Get in touch</h2>
 <p>Artists, grid operators, miners, researchers and press — we'd like to hear from you.</p>
 <div class="box">Email <a href="mailto:sivyis@mail.grokbot.com">sivyis@mail.grokbot.com</a><br><small>Sonify Pro/Labs waitlist: <a href="mailto:sivyis@mail.grokbot.com?subject=SIVYIS%20Sonify%20Pro%2FLabs%20waitlist">join by email</a></small></div></div></section>
 </main>
 <footer><div class="wrap"><span>© 2026 SIVYIS Corp</span><span>All branches are early-stage. The shaman language is metaphor. Demo content is illustrative.</span></div></footer>
 <script>
+/* Giving-back pledge: change this one value */
+var GIVING_PERCENT=5;document.querySelectorAll('.give-pct').forEach(function(e){e.textContent=GIVING_PERCENT+'%'});
 (function(){var c=document.getElementById('sky'),x=c.getContext('2d'),s=[],W,H,d=Math.min(devicePixelRatio||1,2);
 function r(){W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0);s=[];for(var i=0;i<Math.round(W*H/7000);i++)s.push({x:Math.random()*W,y:Math.random()*H,z:Math.random()*1.2+.2,p:Math.random()*6.28,h:[200,320,40,0][i%4]})}
 function f(t){x.clearRect(0,0,W,H);var g=x.createRadialGradient(W*.75,H*.1,0,W*.75,H*.1,W*.7);g.addColorStop(0,'rgba(120,60,200,.18)');g.addColorStop(1,'rgba(5,6,13,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
