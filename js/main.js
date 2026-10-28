@@ -90,7 +90,7 @@
         trigger: ".mask-section",
         start: "top top",
         end: "bottom bottom",
-        scrub: 1.4,
+        scrub: 1.2,
         pin: ".mask-sticky",
         anticipatePin: 1,
       },
@@ -120,7 +120,7 @@
         trigger: ".story-scrub",
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.55,
+        scrub: 1.0,
         pin: pin,
         anticipatePin: 1,
       },
@@ -158,22 +158,28 @@
   /* Soft scrubbed handoffs between content sections */
   gsap.utils.toArray(".mood > section > .wrap").forEach(function (w, i, all) {
     gsap.fromTo(w, { opacity: 0.15, y: 60, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, ease: "none",
-      scrollTrigger: { trigger: w.parentNode, start: "top bottom", end: "top 55%", scrub: 1.4 } });
+      scrollTrigger: { trigger: w.parentNode, start: "top bottom", end: "top 55%", scrub: 1.2 } });
     if (i < all.length - 1) {
       gsap.to(w, { opacity: 0.2, y: -50, scale: 0.98, ease: "none", immediateRender: false,
-        scrollTrigger: { trigger: w.parentNode, start: "bottom 45%", end: "bottom top", scrub: 1.4 } });
+        scrollTrigger: { trigger: w.parentNode, start: "bottom 45%", end: "bottom top", scrub: 1.2 } });
     }
   });
 
-  /* Cycles: expanding rings — one scrubbed transform on the container */
-  if (document.querySelector(".cyc-rings")) {
-    gsap.set(".cyc-rings", { scale: 0.12, xPercent: 0, yPercent: 0, force3D: true });
-    gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.4 } })
-      .to(".cyc-rings", { scale: 1.9, rotation: 240, ease: "none", duration: 0.7 }, 0)
-      .to(".cyc-rings", { xPercent: 45, yPercent: 38, ease: "none", duration: 0.6 }, 0.4)
-      /* Late: dive into the outer waves, fractal minis fade up */
-      .to(".cyc-rings", { scale: 7, rotation: 330, xPercent: 180, yPercent: 180, ease: "none", duration: 0.8 }, 1.0)
-      .fromTo(".cyc-frac", { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.5 }, 1.05);
+  /* Cycles: expanding rings — one continuous scrubbed progress drives
+     scale (exponential = even-feeling zoom), rotation and drift together */
+  var cr = document.querySelector(".cyc-rings");
+  if (cr) {
+    var setR = gsap.quickSetter(cr, "css");
+    var frac = document.querySelector(".cyc-frac");
+    var prog = { p: 0 };
+    var apply = function () {
+      var p = prog.p;
+      setR({ scale: 0.12 * Math.pow(7 / 0.12, p), rotation: 330 * p, xPercent: 180 * p, yPercent: 180 * p, force3D: true });
+      if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
+    };
+    apply();
+    gsap.to(prog, { p: 1, ease: "none", onUpdate: apply,
+      scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.2 } });
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
     gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {

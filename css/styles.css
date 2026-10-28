@@ -188,7 +188,7 @@ h1 span {
 /* ——— Mask zoom (diamond) ——— */
 .mask-section {
   position: relative;
-  height: 320vh;
+  height: 230vh;
   background: var(--bg);
   z-index: 1;
 }
