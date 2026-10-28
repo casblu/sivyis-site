@@ -174,7 +174,12 @@
     var prog = { p: 0 };
     var apply = function () {
       var p = prog.p;
-      setR({ scale: 0.12 * Math.pow(7 / 0.12, p), rotation: 330 * p, xPercent: 180 * p, yPercent: 180 * p, force3D: true });
+      var sc = 0.12 * Math.pow(6 / 0.12, p);
+      /* Drift tracks the zoom: shift = scale x 26.2% x p keeps an outer-ring
+         point (r≈371/1000 at 45°) sliding steadily toward screen center,
+         so rings never leave the frame. */
+      var d = sc * 26.2 * 0.92 * p;
+      setR({ scale: sc, rotation: 330 * p, xPercent: d, yPercent: d, force3D: true });
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
     };
     apply();
