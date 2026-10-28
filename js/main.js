@@ -152,17 +152,12 @@
     });
   }
 
-  /* Cycles: stepped items + expanding rings */
-  var cycRings = gsap.utils.toArray(".cyc-rings i");
-  if (cycRings.length) {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "center top", scrub: 0.3 } });
-    var n = cycRings.length;
-    cycRings.forEach(function (r, i) {
-      tl.fromTo(r, { scale: 0.03, opacity: 0, rotation: 0 }, { scale: 0.3 + i * 0.42, rotation: (i % 2 ? -1 : 1) * (120 + i * 18), opacity: Math.max(0.06, 0.18 - i * 0.008), ease: "power1.in", duration: 1 }, i * (0.35 / n));
-    });
-    tl.timeScale(1);
-    gsap.fromTo(".cyc-rings", { xPercent: 0, yPercent: 0 }, { xPercent: 55, yPercent: 45, ease: "power2.in",
-      scrollTrigger: { trigger: "#cycles", start: "top 60%", end: "bottom bottom", scrub: 0.3 } });
+  /* Cycles: expanding rings — one scrubbed transform on the container */
+  if (document.querySelector(".cyc-rings")) {
+    gsap.set(".cyc-rings", { scale: 0.12, xPercent: 0, yPercent: 0, force3D: true });
+    gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.4 } })
+      .to(".cyc-rings", { scale: 1.9, ease: "none", duration: 0.7 }, 0)
+      .to(".cyc-rings", { xPercent: 45, yPercent: 38, ease: "none", duration: 0.6 }, 0.4);
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
     gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {
