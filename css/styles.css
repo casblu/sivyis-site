@@ -573,6 +573,10 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 .cyc-svg { filter: drop-shadow(0 0 10px rgba(47, 85, 144, 0.35)); }
 .rw { transform-box: view-box; transform-origin: 50% 50%; will-change: transform; animation: cycSpin var(--d) linear infinite; }
 .rw.rev { animation-direction: reverse; }
+.cyc-frac { opacity: 0; }
+.mini { transform-box: fill-box; transform-origin: 50% 50%; will-change: transform; animation: cycSpin var(--d) linear infinite; }
+.mini.rev { animation-direction: reverse; }
+.mini path { stroke-width: inherit; }
 @keyframes cycSpin { to { transform: rotate(360deg); } }
 .cyc { gap: 22px; }
 .cyc li { transition: border-color .4s, background .4s, box-shadow .4s; backdrop-filter: blur(3px); }
@@ -588,7 +592,8 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
   .cyc-svg { filter: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rw { animation: none; }
+  .rw, .mini { animation: none; }
+  .cyc-frac { opacity: 0.4; }
   .cyc-rings { transform: scale(0.9); opacity: 0.35; }
   .cyc li { transition: none; }
 }

@@ -159,7 +159,10 @@
     gsap.set(".cyc-rings", { scale: 0.12, xPercent: 0, yPercent: 0, force3D: true });
     gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.4 } })
       .to(".cyc-rings", { scale: 1.9, rotation: 240, ease: "none", duration: 0.7 }, 0)
-      .to(".cyc-rings", { xPercent: 45, yPercent: 38, ease: "none", duration: 0.6 }, 0.4);
+      .to(".cyc-rings", { xPercent: 45, yPercent: 38, ease: "none", duration: 0.6 }, 0.4)
+      /* Late: dive into the outer waves, fractal minis fade up */
+      .to(".cyc-rings", { scale: 5, rotation: 300, xPercent: 130, yPercent: 130, ease: "none", duration: 0.7 }, 1.0)
+      .fromTo(".cyc-frac", { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.5 }, 1.05);
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
     gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {
