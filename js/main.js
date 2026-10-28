@@ -61,6 +61,8 @@
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  if (reduce) document.querySelectorAll(".cyc-svg animate").forEach(function (a) { a.remove(); });
+
   if (reduce || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
     var stack = document.querySelectorAll(".story-word");
     if (stack.length) {
@@ -156,7 +158,7 @@
   if (document.querySelector(".cyc-rings")) {
     gsap.set(".cyc-rings", { scale: 0.12, xPercent: 0, yPercent: 0, force3D: true });
     gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.4 } })
-      .to(".cyc-rings", { scale: 1.9, ease: "none", duration: 0.7 }, 0)
+      .to(".cyc-rings", { scale: 1.9, rotation: 240, ease: "none", duration: 0.7 }, 0)
       .to(".cyc-rings", { xPercent: 45, yPercent: 38, ease: "none", duration: 0.6 }, 0.4);
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
