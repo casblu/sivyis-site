@@ -161,7 +161,7 @@
       .to(".cyc-rings", { scale: 1.9, rotation: 240, ease: "none", duration: 0.7 }, 0)
       .to(".cyc-rings", { xPercent: 45, yPercent: 38, ease: "none", duration: 0.6 }, 0.4)
       /* Late: dive into the outer waves, fractal minis fade up */
-      .to(".cyc-rings", { scale: 5, rotation: 300, xPercent: 130, yPercent: 130, ease: "none", duration: 0.7 }, 1.0)
+      .to(".cyc-rings", { scale: 7, rotation: 330, xPercent: 180, yPercent: 180, ease: "none", duration: 0.8 }, 1.0)
       .fromTo(".cyc-frac", { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.5 }, 1.05);
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
