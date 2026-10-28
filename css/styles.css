@@ -188,7 +188,7 @@ h1 span {
 /* ——— Mask zoom (diamond) ——— */
 .mask-section {
   position: relative;
-  height: 200vh;
+  height: 320vh;
   background: var(--bg);
   z-index: 1;
 }
@@ -595,4 +595,13 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
   .cyc-frac { opacity: 0.4; }
   .cyc-rings { transform: scale(0.9); opacity: 0.35; }
   .cyc li { transition: none; }
+}
+
+/* Diamond takeover: fractal slants */
+.mask-frac { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.mask-frac path { fill: none; stroke: #2f5590; stroke-linejoin: miter; }
+.mf-bands path { stroke: #1a3a6e; }
+/* Smooth handoffs between beats */
+@media (prefers-reduced-motion: reduce) {
+  .mask-frac { opacity: 0.35; }
 }

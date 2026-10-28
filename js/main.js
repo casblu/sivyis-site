@@ -90,21 +90,22 @@
         trigger: ".mask-section",
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.6,
+        scrub: 1.4,
         pin: ".mask-sticky",
         anticipatePin: 1,
       },
     });
-    maskTl.to(expand, {
-      scale: 1.08,
-      ease: "none",
-      duration: 1,
-      force3D: false,
-    });
+    /* Diamond grows past every corner: full-screen takeover */
+    maskTl.to(expand, { scale: 2.4, ease: "power1.in", duration: 1, force3D: false }, 0);
     if (maskMark) {
-      maskTl.to(maskMark, { opacity: 0, duration: 0.25, ease: "none" }, 0.55);
+      maskTl.to(maskMark, { opacity: 0, duration: 0.25, ease: "none" }, 0.45);
     }
-    maskTl.to({}, { duration: 0.15 });
+    /* Fractal slants dive (self-similar diamonds + diagonal bands) */
+    maskTl.fromTo(".mask-frac", { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.35 }, 0.55);
+    maskTl.fromTo(".mf-tree", { scale: 0.6, rotation: 0 }, { scale: 9, rotation: 90, ease: "power1.in", duration: 1.1, svgOrigin: "500 500" }, 0.55);
+    maskTl.fromTo(".mf-bands", { xPercent: 0 }, { xPercent: -24, ease: "none", duration: 1.1 }, 0.55);
+    /* Glide out: fade the field to page bg so the word scrub fades in under it */
+    maskTl.to(expand, { opacity: 0, ease: "power1.inOut", duration: 0.35 }, 1.35);
   }
 
   /* Word scrub — Everything / moves / in / cycles. */
