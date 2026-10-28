@@ -598,3 +598,18 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 /* Faint rings */
 .cyc-rings i { box-shadow: 0 0 18px -8px currentColor; }
 @media (prefers-reduced-motion: reduce) { .cyc-rings i { opacity: 0.1; } }
+/* Dark-blue wavy spinning rings */
+.cyc-rings i, .cyc-rings i:nth-child(n) {
+  border-color: #1a3a6e; color: #1a3a6e;
+  box-shadow: 0 0 18px -8px #0d2a4a;
+  border-radius: 47% 53% 44% 56% / 55% 44% 56% 45%;
+  animation: cycWave calc(6s + var(--k) * 0.6s) ease-in-out infinite alternate;
+  animation-delay: calc(var(--k) * -0.7s);
+}
+@keyframes cycWave {
+  0%   { border-radius: 47% 53% 44% 56% / 55% 44% 56% 45%; }
+  33%  { border-radius: 56% 44% 53% 47% / 45% 57% 43% 55%; }
+  66%  { border-radius: 43% 57% 48% 52% / 52% 46% 54% 48%; }
+  100% { border-radius: 53% 47% 57% 43% / 46% 54% 45% 55%; }
+}
+@media (prefers-reduced-motion: reduce) { .cyc-rings i, .cyc-rings i:nth-child(n) { animation: none; } }

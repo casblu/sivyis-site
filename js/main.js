@@ -158,7 +158,7 @@
     var tl = gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "center top", scrub: 0.3 } });
     var n = cycRings.length;
     cycRings.forEach(function (r, i) {
-      tl.fromTo(r, { scale: 0.03, opacity: 0 }, { scale: 0.3 + i * 0.42, opacity: Math.max(0.06, 0.18 - i * 0.008), ease: "power1.in", duration: 1 }, i * (0.35 / n));
+      tl.fromTo(r, { scale: 0.03, opacity: 0, rotation: 0 }, { scale: 0.3 + i * 0.42, rotation: (i % 2 ? -1 : 1) * (120 + i * 18), opacity: Math.max(0.06, 0.18 - i * 0.008), ease: "power1.in", duration: 1 }, i * (0.35 / n));
     });
     tl.timeScale(1);
     gsap.fromTo(".cyc-rings", { xPercent: 0, yPercent: 0 }, { xPercent: 55, yPercent: 45, ease: "power2.in",
