@@ -61,7 +61,7 @@
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (reduce) document.querySelectorAll(".cyc-svg animate").forEach(function (a) { a.remove(); });
+  if (reduce) document.querySelectorAll(".cl animate").forEach(function (a) { a.remove(); });
 
   if (reduce || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
     var stack = document.querySelectorAll(".story-word");
@@ -170,7 +170,7 @@
   var cr = document.querySelector(".cyc-rings");
   if (cr) {
     var setR = gsap.quickSetter(cr, "css");
-    var frac = document.querySelector(".cyc-frac");
+    var frac = document.querySelector(".cf");
     var prog = { p: 0 };
     var apply = function () {
       var p = prog.p;
@@ -179,12 +179,12 @@
          point (r≈371/1000 at 45°) sliding steadily toward screen center,
          so rings never leave the frame. */
       var d = sc * 26.2 * 0.92 * p;
-      setR({ scale: sc, rotation: 330 * p, xPercent: d, yPercent: d, force3D: true });
+      setR({ scale: sc, rotation: 330 * p, rotationX: 22 - 14 * p, rotationY: -12 + 20 * p, xPercent: d, yPercent: d, force3D: true });
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
     };
     apply();
     gsap.to(prog, { p: 1, ease: "none", onUpdate: apply,
-      scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.2 } });
+      scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.4 } });
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
     gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {
