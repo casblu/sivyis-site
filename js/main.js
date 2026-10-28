@@ -171,8 +171,9 @@
   if (cr) {
     var setR = gsap.quickSetter(cr, "css");
     var frac = document.querySelector(".cf");
-    var layers = gsap.utils.toArray(".cl:not(.cf)");
+    var layers = gsap.utils.toArray(".cl.cr");
     var nL = layers.length;
+    var spir = gsap.utils.toArray(".cl.cs");
     var prog = { p: 0 };
     var apply = function () {
       var p = prog.p;
@@ -183,11 +184,13 @@
       var d = sc * 26.2 * 0.92 * p;
       setR({ scale: sc, rotation: 330 * p, rotationX: 22 - 14 * p, rotationY: -12 + 20 * p, xPercent: d, yPercent: d, force3D: true });
       /* Spiral opening: layers wound on a helix into depth, unwinding into a straight tunnel by ~55% */
-      var u = Math.max(0, 1 - p / 0.55); u = u * u * (3 - 2 * u);
+      var u = Math.max(0, 1 - p / 0.6); u = u * u * (3 - 2 * u);
       for (var k = 0; k < nL; k++) {
-        var a = k * 0.75 + p * 2.2, rad = 4 + 22 * u * (k / nL);
-        layers[k].style.translate = (Math.cos(a) * rad * u).toFixed(2) + "% " + (Math.sin(a) * rad * u).toFixed(2) + "% " + ((nL / 2 - k) * (28 + 40 * u)).toFixed(1) + "px";
+        /* Archimedean helix: angle and radius both grow with depth index */
+        var a = k * 0.55 + p * 2.4, rad = 1.2 * k * u;
+        layers[k].style.translate = (Math.cos(a) * rad).toFixed(2) + "% " + (Math.sin(a) * rad).toFixed(2) + "% " + ((nL / 2 - k) * (18 + 30 * u)).toFixed(1) + "px";
       }
+      if (spir) spir.forEach(function (el, i) { el.style.opacity = (0.35 + 0.65 * u).toFixed(3); });
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
     };
     apply();
