@@ -576,7 +576,6 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 .cyc-frac { opacity: 0; }
 .mini { transform-box: fill-box; transform-origin: 50% 50%; will-change: transform; animation: cycSpin var(--d) linear infinite; }
 .mini.rev { animation-direction: reverse; }
-.mini path { stroke-width: inherit; }
 @keyframes cycSpin { to { transform: rotate(360deg); } }
 .cyc { gap: 22px; }
 .cyc li { transition: border-color .4s, background .4s, box-shadow .4s; backdrop-filter: blur(3px); }
