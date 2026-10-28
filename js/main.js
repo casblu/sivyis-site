@@ -147,13 +147,23 @@
     });
 
     tl.to(wordEls[wordEls.length - 1], {
-      opacity: 0.25,
+      opacity: 0,
       scale: 1.2,
       y: -16,
       duration: 0.5,
       ease: "none",
     });
   }
+
+  /* Soft scrubbed handoffs between content sections */
+  gsap.utils.toArray(".mood > section > .wrap").forEach(function (w, i, all) {
+    gsap.fromTo(w, { opacity: 0.15, y: 60, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, ease: "none",
+      scrollTrigger: { trigger: w.parentNode, start: "top bottom", end: "top 55%", scrub: 1.4 } });
+    if (i < all.length - 1) {
+      gsap.to(w, { opacity: 0.2, y: -50, scale: 0.98, ease: "none", immediateRender: false,
+        scrollTrigger: { trigger: w.parentNode, start: "bottom 45%", end: "bottom top", scrub: 1.4 } });
+    }
+  });
 
   /* Cycles: expanding rings — one scrubbed transform on the container */
   if (document.querySelector(".cyc-rings")) {
