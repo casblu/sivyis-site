@@ -152,8 +152,24 @@
     });
   }
 
+  /* Cycles: stepped items + expanding rings */
+  var cycRings = gsap.utils.toArray(".cyc-rings i");
+  if (cycRings.length) {
+    var tl = gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top bottom", end: "bottom top", scrub: 0.6 } });
+    cycRings.forEach(function (r, i) {
+      tl.fromTo(r, { scale: 0.04, opacity: 0 }, { scale: 0.25 + i * 0.32, opacity: 0.85 - i * 0.06, ease: "none", duration: 1 }, i * 0.08);
+    });
+  }
+  gsap.utils.toArray(".cyc li").forEach(function (el, i) {
+    gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {
+      y: 0, x: 0, scale: 1, opacity: 1, ease: "power2.out",
+      scrollTrigger: { trigger: el, start: "top 95%", end: "top 62%", scrub: 0.5 },
+    });
+    ScrollTrigger.create({ trigger: el, start: "top 60%", end: "bottom 40%", toggleClass: "on" });
+  });
+
   /* Section / card entrance */
-  gsap.utils.toArray(".card, .cyc li, .svc div, .facts").forEach(function (el, i) {
+  gsap.utils.toArray(".card, .svc div, .facts").forEach(function (el, i) {
     gsap.from(el, {
       y: 36,
       opacity: 0,
