@@ -595,3 +595,6 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 /* Thick ring bands */
 .cyc-rings i { border-width: 14px; box-shadow: 0 0 30px -4px currentColor, inset 0 0 22px -6px currentColor; }
 @media (max-width: 900px) { .cyc-rings i { border-width: 10px; } }
+/* Faint rings */
+.cyc-rings i { box-shadow: 0 0 18px -8px currentColor; }
+@media (prefers-reduced-motion: reduce) { .cyc-rings i { opacity: 0.1; } }
