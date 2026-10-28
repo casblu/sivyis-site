@@ -183,12 +183,12 @@
          so rings never leave the frame. */
       var d = sc * 26.2 * 0.92 * p;
       setR({ scale: sc, rotation: 330 * p, rotationX: 22 - 14 * p, rotationY: -12 + 20 * p, xPercent: d, yPercent: d, force3D: true });
-      /* Spiral opening: large circular helix into depth, unwinding into a straight tunnel */
-      var u = Math.max(0, 1 - p / 0.9); u = u * u * (3 - 2 * u);
+      /* Spiral opening: mellow wide long helix into depth, unwinding into a straight tunnel */
+      var u = Math.max(0, 1 - p / 1.05); u = u * u * (3 - 2 * u);
       for (var k = 0; k < nL; k++) {
-        /* Big coil-circle: equal large radius, more angular travel = longer helix path */
-        var a = k * 0.55 + p * 3.2, rad = 30 * (0.28 + 0.72 * u);
-        layers[k].style.translate = (Math.cos(a) * rad).toFixed(2) + "% " + (Math.sin(a) * rad).toFixed(2) + "% " + ((nL / 2 - k) * (12 + 14 * u)).toFixed(1) + "px";
+        /* Mellow coil-circle: much wider radius + longer angular travel (~6.3 turns) */
+        var a = k * 1.02 + p * 3.8, rad = 52 * (0.32 + 0.68 * u);
+        layers[k].style.translate = (Math.cos(a) * rad).toFixed(2) + "% " + (Math.sin(a) * rad).toFixed(2) + "% " + ((nL / 2 - k) * (16 + 20 * u)).toFixed(1) + "px";
       }
       if (spir) spir.forEach(function (el, i) { el.style.opacity = (0.35 + 0.65 * u).toFixed(3); });
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
