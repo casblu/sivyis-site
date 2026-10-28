@@ -158,9 +158,11 @@
     var tl = gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "center top", scrub: 0.3 } });
     var n = cycRings.length;
     cycRings.forEach(function (r, i) {
-      tl.fromTo(r, { scale: 0.03, opacity: 0 }, { scale: 0.3 + i * 0.42, opacity: Math.max(0.2, 0.9 - i * 0.045), ease: "power1.in", duration: 1 }, i * (0.5 / n));
+      tl.fromTo(r, { scale: 0.03, opacity: 0 }, { scale: 0.3 + i * 0.42, opacity: Math.max(0.2, 0.9 - i * 0.045), ease: "power1.in", duration: 1 }, i * (0.35 / n));
     });
-    tl.fromTo(".cyc-rings", { xPercent: -6, yPercent: 4 }, { xPercent: 14, yPercent: -10, ease: "sine.inOut", duration: 1.5 }, 0);
+    tl.timeScale(1);
+    gsap.fromTo(".cyc-rings", { xPercent: 0, yPercent: 0 }, { xPercent: -55, yPercent: 45, ease: "power2.in",
+      scrollTrigger: { trigger: "#cycles", start: "top 60%", end: "bottom bottom", scrub: 0.3 } });
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
     gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {
