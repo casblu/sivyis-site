@@ -183,13 +183,12 @@
          so rings never leave the frame. */
       var d = sc * 26.2 * 0.92 * p;
       setR({ scale: sc, rotation: 330 * p, rotationX: 22 - 14 * p, rotationY: -12 + 20 * p, xPercent: d, yPercent: d, force3D: true });
-      /* Spiral opening: layers wound on a helix into depth, unwinding into a straight tunnel by ~55% */
-      var u = Math.max(0, 1 - p / 0.8); u = u * u * (3 - 2 * u);
+      /* Spiral opening: large circular helix into depth, unwinding into a straight tunnel */
+      var u = Math.max(0, 1 - p / 0.9); u = u * u * (3 - 2 * u);
       for (var k = 0; k < nL; k++) {
-        /* Tight circular coil: every ring orbits the axis at the same radius,
-           small angle step + tiny z gap = dense helical spring tunnel */
-        var a = k * 0.32 + p * 3.0, rad = 13 * (0.25 + 0.75 * u);
-        layers[k].style.translate = (Math.cos(a) * rad).toFixed(2) + "% " + (Math.sin(a) * rad).toFixed(2) + "% " + ((nL / 2 - k) * (9 + 9 * u)).toFixed(1) + "px";
+        /* Big coil-circle: equal large radius, more angular travel = longer helix path */
+        var a = k * 0.55 + p * 3.2, rad = 30 * (0.28 + 0.72 * u);
+        layers[k].style.translate = (Math.cos(a) * rad).toFixed(2) + "% " + (Math.sin(a) * rad).toFixed(2) + "% " + ((nL / 2 - k) * (12 + 14 * u)).toFixed(1) + "px";
       }
       if (spir) spir.forEach(function (el, i) { el.style.opacity = (0.35 + 0.65 * u).toFixed(3); });
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
