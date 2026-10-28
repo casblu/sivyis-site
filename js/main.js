@@ -155,10 +155,12 @@
   /* Cycles: stepped items + expanding rings */
   var cycRings = gsap.utils.toArray(".cyc-rings i");
   if (cycRings.length) {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top bottom", end: "bottom top", scrub: 0.6 } });
+    var tl = gsap.timeline({ scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "center top", scrub: 0.3 } });
+    var n = cycRings.length;
     cycRings.forEach(function (r, i) {
-      tl.fromTo(r, { scale: 0.04, opacity: 0 }, { scale: 0.25 + i * 0.32, opacity: 0.85 - i * 0.06, ease: "none", duration: 1 }, i * 0.08);
+      tl.fromTo(r, { scale: 0.03, opacity: 0 }, { scale: 0.3 + i * 0.42, opacity: Math.max(0.2, 0.9 - i * 0.045), ease: "power1.in", duration: 1 }, i * (0.5 / n));
     });
+    tl.fromTo(".cyc-rings", { xPercent: -6, yPercent: 4 }, { xPercent: 14, yPercent: -10, ease: "sine.inOut", duration: 1.5 }, 0);
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
     gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {
