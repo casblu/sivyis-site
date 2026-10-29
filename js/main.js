@@ -179,11 +179,12 @@
   });
 
   /* Cycles: expanding rings — one continuous scrubbed progress drives
-     scale, rotation and the coil together.
+     scale (exponential = even-feeling zoom), rotation and drift together.
      Coil stays the restored circle: radius 30%, about 3.5 turns (k * 0.55).
-     Scale tops out while the outermost wavy ring (r≈381/1000) plus that coil
-     still sits inside the viewport, so each ring reads as a full circle.
-     A small drift keeps the tunnel breathing without shoving rings off-screen. */
+     Zoom runs from that opening size into the outer edge, where the waves
+     shed off the screen. The spiral's center drifts linearly to the
+     bottom-right corner and arrives there as the zoom finishes.
+     Rings stay whole circles (no clip) and leave upward on the handoff. */
   var cr = document.querySelector(".cyc-rings");
   if (cr) {
     var setR = gsap.quickSetter(cr, "css");
@@ -193,40 +194,31 @@
     var spir = gsap.utils.toArray(".cl.cs");
     var prog = { p: 0 };
     var stick = document.querySelector(".cyc-stick");
+    var end = { x: 50, y: 50 };
+    var measureEnd = function () {
+      var ringW = cr.offsetWidth || 1;
+      var ringH = cr.offsetHeight || 1;
+      var stickW = stick ? stick.offsetWidth : (window.innerWidth || ringW);
+      var stickH = stick ? stick.offsetHeight : (window.innerHeight || ringH);
+      end.x = (stickW * 0.5) / ringW * 100;
+      end.y = (stickH * 0.5) / ringH * 100;
+    };
+    measureEnd();
+    window.addEventListener("resize", measureEnd);
     var apply = function () {
       var p = prog.p;
-      var sc = 0.28 * Math.pow(0.86 / 0.28, p);
-      var d = 1.4 * p;
+      var sc = 0.28 * Math.pow(6 / 0.28, p);
       /* Spiral opening: large circular helix into depth, unwinding into a straight tunnel */
       var u = Math.max(0, 1 - p / 0.9); u = u * u * (3 - 2 * u);
-      /* While Cycles is still rising into view, nudge the coil up only as far as
-         the section allows and hide it if a ring would still be sliced by the
-         viewport. Once the section is pinned or leaving, let the full circles
-         scroll upward on their own. */
-      var yShift = 0;
-      var fade = 1;
-      if (stick) {
-        var br = stick.getBoundingClientRect();
-        var vh = window.innerHeight || 800;
-        var vmin = Math.min(window.innerWidth || vh, vh);
-        var helix = 30 * (0.28 + 0.72 * u);
-        var radPx = vmin * sc * (helix + 48) / 100 + 16;
-        var cy = br.top + br.height / 2;
-        if (br.top > 1) {
-          var margin = 28;
-          var header = 72;
-          var overflowBot = (cy + radPx) - (vh - margin);
-          if (overflowBot > 8) {
-            var maxUp = cy - radPx - Math.max(br.top, header);
-            var shift = Math.min(overflowBot, Math.max(0, maxUp));
-            yShift = -shift;
-            var still = overflowBot - shift;
-            fade = still > 6 ? 0 : 1;
-          }
-        }
-      }
-      cr.style.opacity = fade.toFixed(3);
-      setR({ scale: sc, rotation: 330 * p, rotationX: 22 - 14 * p, rotationY: -12 + 20 * p, xPercent: d, yPercent: d * 0.55, y: yShift, force3D: true });
+      setR({
+        scale: sc,
+        rotation: 330 * p,
+        rotationX: 22 - 14 * p,
+        rotationY: -12 + 20 * p,
+        xPercent: end.x * p,
+        yPercent: end.y * p,
+        force3D: true
+      });
       for (var k = 0; k < nL; k++) {
         /* Big coil-circle: equal large radius, more angular travel = longer helix path */
         var a = k * 0.55 + p * 3.2, rad = 30 * (0.28 + 0.72 * u);
@@ -236,8 +228,15 @@
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
     };
     apply();
+    window.addEventListener("load", function () { measureEnd(); apply(); });
     gsap.to(prog, { p: 1, ease: "none", onUpdate: apply,
-      scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.4 } });
+      scrollTrigger: {
+        trigger: "#cycles",
+        start: "top 85%",
+        end: "bottom bottom",
+        scrub: 1.4,
+        onRefresh: function () { measureEnd(); apply(); }
+      } });
   }
 
   /* Seam: background hue shifts, then the mirror-textile glow takes the handoff.
