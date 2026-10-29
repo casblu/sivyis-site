@@ -63,6 +63,19 @@
 
   if (reduce) document.querySelectorAll(".cl animate").forEach(function (a) { a.remove(); });
 
+  /* Handoff sits on the Cycles → Branches seam: shifting wash + textile glow. */
+  var handoff = document.querySelector(".handoff");
+  function placeHandoff() {
+    var mood = document.querySelector(".mood");
+    var cyc = document.getElementById("cycles");
+    if (!handoff || !mood || !cyc) return;
+    var vh = window.innerHeight || 800;
+    handoff.style.height = Math.round(vh * 1.85) + "px";
+    handoff.style.top = Math.max(0, cyc.offsetTop + cyc.offsetHeight - Math.round(vh * 1.05)) + "px";
+  }
+  placeHandoff();
+  window.addEventListener("resize", placeHandoff);
+
   if (reduce || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
     var stack = document.querySelectorAll(".story-word");
     if (stack.length) {
@@ -166,7 +179,11 @@
   });
 
   /* Cycles: expanding rings — one continuous scrubbed progress drives
-     scale (exponential = even-feeling zoom), rotation and drift together */
+     scale, rotation and the coil together.
+     Coil stays the restored circle: radius 30%, about 3.5 turns (k * 0.55).
+     Scale tops out while the outermost wavy ring (r≈381/1000) plus that coil
+     still sits inside the viewport, so each ring reads as a full circle.
+     A small drift keeps the tunnel breathing without shoving rings off-screen. */
   var cr = document.querySelector(".cyc-rings");
   if (cr) {
     var setR = gsap.quickSetter(cr, "css");
@@ -175,16 +192,41 @@
     var nL = layers.length;
     var spir = gsap.utils.toArray(".cl.cs");
     var prog = { p: 0 };
+    var stick = document.querySelector(".cyc-stick");
     var apply = function () {
       var p = prog.p;
-      var sc = 0.12 * Math.pow(6 / 0.12, p);
-      /* Drift tracks the zoom: shift = scale x 26.2% x p keeps an outer-ring
-         point (r≈371/1000 at 45°) sliding steadily toward screen center,
-         so rings never leave the frame. */
-      var d = sc * 26.2 * 0.92 * p;
-      setR({ scale: sc, rotation: 330 * p, rotationX: 22 - 14 * p, rotationY: -12 + 20 * p, xPercent: d, yPercent: d, force3D: true });
+      var sc = 0.28 * Math.pow(0.86 / 0.28, p);
+      var d = 1.4 * p;
       /* Spiral opening: large circular helix into depth, unwinding into a straight tunnel */
       var u = Math.max(0, 1 - p / 0.9); u = u * u * (3 - 2 * u);
+      /* While Cycles is still rising into view, nudge the coil up only as far as
+         the section allows and hide it if a ring would still be sliced by the
+         viewport. Once the section is pinned or leaving, let the full circles
+         scroll upward on their own. */
+      var yShift = 0;
+      var fade = 1;
+      if (stick) {
+        var br = stick.getBoundingClientRect();
+        var vh = window.innerHeight || 800;
+        var vmin = Math.min(window.innerWidth || vh, vh);
+        var helix = 30 * (0.28 + 0.72 * u);
+        var radPx = vmin * sc * (helix + 48) / 100 + 16;
+        var cy = br.top + br.height / 2;
+        if (br.top > 1) {
+          var margin = 28;
+          var header = 72;
+          var overflowBot = (cy + radPx) - (vh - margin);
+          if (overflowBot > 8) {
+            var maxUp = cy - radPx - Math.max(br.top, header);
+            var shift = Math.min(overflowBot, Math.max(0, maxUp));
+            yShift = -shift;
+            var still = overflowBot - shift;
+            fade = still > 6 ? 0 : 1;
+          }
+        }
+      }
+      cr.style.opacity = fade.toFixed(3);
+      setR({ scale: sc, rotation: 330 * p, rotationX: 22 - 14 * p, rotationY: -12 + 20 * p, xPercent: d, yPercent: d * 0.55, y: yShift, force3D: true });
       for (var k = 0; k < nL; k++) {
         /* Big coil-circle: equal large radius, more angular travel = longer helix path */
         var a = k * 0.55 + p * 3.2, rad = 30 * (0.28 + 0.72 * u);
@@ -196,6 +238,33 @@
     apply();
     gsap.to(prog, { p: 1, ease: "none", onUpdate: apply,
       scrollTrigger: { trigger: "#cycles", start: "top 85%", end: "bottom bottom", scrub: 1.4 } });
+  }
+
+  /* Seam: background hue shifts, then the mirror-textile glow takes the handoff.
+     Rings themselves are not faded here — they leave by scrolling up. */
+  if (handoff) {
+    var washB = handoff.querySelector(".wash-b");
+    var washC = handoff.querySelector(".wash-c");
+    var setH = gsap.quickSetter(handoff, "opacity");
+    var setB = washB ? gsap.quickSetter(washB, "opacity") : null;
+    var setC = washC ? gsap.quickSetter(washC, "opacity") : null;
+    ScrollTrigger.create({
+      trigger: "#cycles",
+      start: "bottom 108%",
+      endTrigger: "#branches",
+      end: "22% top",
+      scrub: 1.2,
+      onRefresh: placeHandoff,
+      onUpdate: function (self) {
+        var p = self.progress;
+        /* Rise while the circles are still on screen, hold across the seam, then ease out. */
+        var env = p < 0.1 ? p / 0.1 : p < 0.34 ? 1 : p < 0.68 ? 1 - (p - 0.34) / 0.34 : 0;
+        setH(env);
+        if (setB) setB(Math.min(1, Math.max(0, (p - 0.04) / 0.34)));
+        if (setC) setC(Math.min(1, Math.max(0, (p - 0.28) / 0.36)));
+      }
+    });
+    ScrollTrigger.addEventListener("refreshInit", placeHandoff);
   }
   gsap.utils.toArray(".cyc li").forEach(function (el, i) {
     gsap.fromTo(el, { y: 90, x: (i % 2 ? 40 : -40), scale: 0.82, opacity: 0 }, {
