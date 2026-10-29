@@ -433,7 +433,7 @@ footer .wrap {
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 18px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(7, 9, 20, 0.9);
   position: relative;
 }
 .cyc b { display: block; font-size: 17px; margin-bottom: 2px; }
@@ -562,19 +562,26 @@ html, body { overflow-x: clip; width: 100%; max-width: 100%; }
 main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pin-spacer { max-width: 100vw; overflow-x: clip; }
 @media (max-width: 900px) { .rings { right: -20%; } }
 
-/* Cycles: stepped list + expanding wavy rings */
-#cycles { position: relative; overflow: hidden; overflow: clip; }
+/* Cycles: stepped list + expanding wavy rings.
+   Overflow stays visible so the coil is not razor-cut at the section edge;
+   the circles scroll up intact into the next section. */
+#cycles { position: relative; overflow: visible; }
 #cycles > .wrap { position: relative; z-index: 1; }
-.cyc-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
-.cyc-stick { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; display: grid; place-items: center; }
+#cycles > .wrap h2,
+#cycles > .wrap .rise-block p {
+  text-shadow: 0 2px 18px rgba(5, 6, 13, 0.9);
+}
+.cyc-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: visible; }
+.cyc-stick { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: visible; display: grid; place-items: center; }
 .cyc-stick { perspective: 900px; perspective-origin: 50% 45%; }
-.cyc-rings { position: relative; width: 100vmin; aspect-ratio: 1; transform-style: preserve-3d; will-change: transform; transform: scale(0.12); }
+.cyc-rings { position: relative; width: 100vmin; aspect-ratio: 1; transform-style: preserve-3d; will-change: transform; transform: scale(0.28); overflow: visible; }
 .cl { position: absolute; inset: 0; will-change: transform; backface-visibility: hidden;
   animation: clSpin var(--d) linear infinite, clBreath var(--b) ease-in-out infinite alternate; }
 .cl.rev { animation-direction: reverse, alternate; }
 .cs { translate: 0 0 var(--z); }
 .cl svg, .fc svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.cl path, .fc path { fill: none; stroke: #2f5590; stroke-linejoin: round; }
+.cl path, .fc path { fill: none; stroke: var(--ring, #5ee1ff); stroke-linejoin: round; stroke-linecap: round; }
+.cl.cr path { opacity: 0.72; }
 .cf { position: absolute; inset: 0; opacity: 0; translate: 0 0 -200px; will-change: opacity, transform; }
 /* fractal clusters: orbit (spiral drift) + own spin + pulse, all compositor-only */
 .fo { position: absolute; inset: 0; transform-origin: var(--ox) var(--oy); will-change: transform;
@@ -590,7 +597,7 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 .cyc li { transition: border-color .4s, background .4s, box-shadow .4s; }
 .cyc li:nth-child(3n+2) { margin-top: 36px; }
 .cyc li:nth-child(3n) { margin-top: 72px; }
-.cyc li.on { border-color: var(--cy); background: rgba(94,225,255,0.08); box-shadow: 0 0 40px -12px var(--cy); }
+.cyc li.on { border-color: var(--cy); background: rgba(8, 22, 34, 0.94); box-shadow: 0 0 40px -12px var(--cy); }
 .cyc b { transition: font-size .3s; }
 .cyc li.on b { font-size: 21px; }
 @media (max-width: 900px) {
@@ -602,7 +609,10 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 @media (prefers-reduced-motion: reduce) {
   .cl, .fo, .fc { animation: none; }
   .cf { opacity: 0.4; }
-  .cyc-rings { transform: scale(0.9); opacity: 0.35; }
+  .cyc-rings { transform: scale(0.48); opacity: 0.7; }
+  .handoff { opacity: 0.8; }
+  .wash-b { opacity: 0.72; }
+  .wash-c { opacity: 0.5; }
   .cyc li { transition: none; }
 }
 
@@ -614,3 +624,127 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 @media (prefers-reduced-motion: reduce) {
   .mask-frac { opacity: 0.35; }
 }
+
+/* Cycles → Branches: shifting wash, then a translucent Hmong-textile mirror glow */
+.handoff {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  overflow: hidden;
+}
+.wash { position: absolute; inset: 0; }
+.wash-a {
+  background:
+    radial-gradient(ellipse at 50% 46%, rgba(94, 225, 255, 0.34), transparent 60%),
+    radial-gradient(ellipse at 16% 68%, rgba(70, 110, 255, 0.22), transparent 48%),
+    linear-gradient(180deg, rgba(4, 8, 24, 0) 0%, rgba(8, 28, 72, 0.72) 48%, rgba(5, 8, 20, 0) 100%);
+}
+.wash-b {
+  opacity: 0;
+  background:
+    radial-gradient(ellipse at 40% 50%, rgba(255, 106, 213, 0.4), transparent 58%),
+    radial-gradient(ellipse at 74% 34%, rgba(160, 70, 240, 0.28), transparent 50%),
+    linear-gradient(180deg, rgba(24, 4, 28, 0) 0%, rgba(78, 14, 58, 0.55) 50%, rgba(10, 6, 18, 0) 100%);
+}
+.wash-c {
+  opacity: 0;
+  background:
+    radial-gradient(ellipse at 60% 48%, rgba(245, 166, 35, 0.36), transparent 54%),
+    radial-gradient(ellipse at 26% 64%, rgba(40, 190, 160, 0.28), transparent 50%),
+    linear-gradient(180deg, rgba(20, 12, 4, 0) 0%, rgba(48, 28, 8, 0.5) 50%, rgba(4, 16, 16, 0) 100%);
+}
+.textile-glow {
+  position: absolute;
+  inset: 4% 0 6%;
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  animation: textilePulse 5.8s ease-in-out infinite alternate;
+}
+.textile-field { width: 100%; height: 100%; display: block; }
+.mirror-sheen {
+  position: absolute;
+  inset: -12%;
+  background: linear-gradient(
+    112deg,
+    transparent 36%,
+    rgba(255, 255, 255, 0.2) 46%,
+    rgba(94, 225, 255, 0.16) 50%,
+    rgba(255, 106, 213, 0.1) 55%,
+    transparent 66%
+  );
+  mix-blend-mode: screen;
+  animation: mirrorGlint 8s ease-in-out infinite alternate;
+}
+@keyframes textilePulse {
+  from { opacity: 0.34; transform: translateY(0) scale(1); }
+  to { opacity: 0.62; transform: translateY(-1.4%) scale(1.018); }
+}
+@keyframes mirrorGlint {
+  from { transform: translateX(-10%) translateY(2%); }
+  to { transform: translateX(10%) translateY(-4%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .handoff { opacity: 0.8; }
+  .wash-b { opacity: 0.72; }
+  .wash-c { opacity: 0.5; }
+  .textile-glow, .mirror-sheen { animation: none; opacity: 0.7; }
+}
+
+/* Tunnel depth: each waving ring shifts hue slightly from the one before it. */
+.cyc-rings > .cl:nth-child(1) { --ring: hsl(190 96% 64%); }
+.cyc-rings > .cl:nth-child(2) { --ring: hsl(194 95% 64%); }
+.cyc-rings > .cl:nth-child(3) { --ring: hsl(197 94% 65%); }
+.cyc-rings > .cl:nth-child(4) { --ring: hsl(201 92% 65%); }
+.cyc-rings > .cl:nth-child(5) { --ring: hsl(204 91% 66%); }
+.cyc-rings > .cl:nth-child(6) { --ring: hsl(208 90% 66%); }
+.cyc-rings > .cl:nth-child(7) { --ring: hsl(213 88% 67%); }
+.cyc-rings > .cl:nth-child(8) { --ring: hsl(219 85% 68%); }
+.cyc-rings > .cl:nth-child(9) { --ring: hsl(224 83% 68%); }
+.cyc-rings > .cl:nth-child(10) { --ring: hsl(230 81% 69%); }
+.cyc-rings > .cl:nth-child(11) { --ring: hsl(235 78% 70%); }
+.cyc-rings > .cl:nth-child(12) { --ring: hsl(241 78% 70%); }
+.cyc-rings > .cl:nth-child(13) { --ring: hsl(247 77% 70%); }
+.cyc-rings > .cl:nth-child(14) { --ring: hsl(253 77% 70%); }
+.cyc-rings > .cl:nth-child(15) { --ring: hsl(259 77% 70%); }
+.cyc-rings > .cl:nth-child(16) { --ring: hsl(264 76% 70%); }
+.cyc-rings > .cl:nth-child(17) { --ring: hsl(271 77% 70%); }
+.cyc-rings > .cl:nth-child(18) { --ring: hsl(278 78% 70%); }
+.cyc-rings > .cl:nth-child(19) { --ring: hsl(284 79% 70%); }
+.cyc-rings > .cl:nth-child(20) { --ring: hsl(291 80% 70%); }
+.cyc-rings > .cl:nth-child(21) { --ring: hsl(298 82% 70%); }
+.cyc-rings > .cl:nth-child(22) { --ring: hsl(304 84% 70%); }
+.cyc-rings > .cl:nth-child(23) { --ring: hsl(309 86% 69%); }
+.cyc-rings > .cl:nth-child(24) { --ring: hsl(314 89% 69%); }
+.cyc-rings > .cl:nth-child(25) { --ring: hsl(319 92% 68%); }
+.cyc-rings > .cl:nth-child(26) { --ring: hsl(324 94% 68%); }
+.cyc-rings > .cl:nth-child(27) { --ring: hsl(329 92% 67%); }
+.cyc-rings > .cl:nth-child(28) { --ring: hsl(334 90% 66%); }
+.cyc-rings > .cl:nth-child(29) { --ring: hsl(340 88% 65%); }
+.cyc-rings > .cl:nth-child(30) { --ring: hsl(345 85% 65%); }
+.cyc-rings > .cl:nth-child(31) { --ring: hsl(351 85% 64%); }
+.cyc-rings > .cl:nth-child(32) { --ring: hsl(360 86% 63%); }
+.cyc-rings > .cl:nth-child(33) { --ring: hsl(8 88% 62%); }
+.cyc-rings > .cl:nth-child(34) { --ring: hsl(17 90% 61%); }
+.cyc-rings > .cl:nth-child(35) { --ring: hsl(25 91% 60%); }
+.cyc-rings > .cl:nth-child(36) { --ring: hsl(47 88% 59%); }
+.cyc-rings > .cl:nth-child(37) { --ring: hsl(74 82% 59%); }
+.cyc-rings > .cl:nth-child(38) { --ring: hsl(101 76% 58%); }
+.cyc-rings > .cl:nth-child(39) { --ring: hsl(129 70% 57%); }
+.cyc-rings > .cl:nth-child(40) { --ring: hsl(156 64% 56%); }
+.cyc-rings > .cl:nth-child(41) { --ring: hsl(355 85% 63%); }
+.cyc-rings > .cl:nth-child(42) { --ring: hsl(18 90% 61%); }
+.cyc-rings > .cl:nth-child(43) { --ring: hsl(71 83% 59%); }
+.cyc-rings > .cl:nth-child(44) { --ring: hsl(145 66% 56%); }
+.cf > .fo:nth-child(1) { --ring: hsl(201 92% 65%); }
+.cf > .fo:nth-child(2) { --ring: hsl(217 86% 67%); }
+.cf > .fo:nth-child(3) { --ring: hsl(236 78% 70%); }
+.cf > .fo:nth-child(4) { --ring: hsl(257 77% 70%); }
+.cf > .fo:nth-child(5) { --ring: hsl(279 78% 70%); }
+.cf > .fo:nth-child(6) { --ring: hsl(302 83% 70%); }
+.cf > .fo:nth-child(7) { --ring: hsl(320 92% 68%); }
+.cf > .fo:nth-child(8) { --ring: hsl(338 88% 66%); }
+.cf > .fo:nth-child(9) { --ring: hsl(1 87% 63%); }
+.cf > .fo:nth-child(10) { --ring: hsl(39 90% 60%); }
