@@ -208,6 +208,36 @@
     /* Ring colors: read each ring's starting hue, ease toward the SIVYIS blues
        (--cy #5ee1ff ≈ hsl 191, deepening to hsl 222) along the shortest hue path,
        keeping saturation high so the blend never passes through gray. */
+    /* 3D tube look: each ring path gets a dark wide underlay (inner edge + soft
+       shadow), a faint colored halo (glow) and an offset thin highlight on top.
+       Built once; all three follow --ring / opacity, so no per-frame work. */
+    var NS = "http://www.w3.org/2000/svg";
+    gsap.utils.toArray(".cyc-rings > .cl path").forEach(function (path) {
+      if (path.dataset.tube) return;
+      path.dataset.tube = "1";
+      var w = parseFloat(path.getAttribute("stroke-width")) || parseFloat(getComputedStyle(path).strokeWidth) || 1.2;
+      var mk = function (cls, sw) {
+        var c = path.cloneNode(false);
+        c.removeAttribute("stroke-opacity");
+        c.setAttribute("class", cls);
+        c.setAttribute("stroke-width", (w * sw).toFixed(2));
+        c.dataset.tube = "1";
+        return c;
+      };
+      path.parentNode.insertBefore(mk("tube-halo", 4.2), path);
+      path.parentNode.insertBefore(mk("tube-shade", 2.1), path);
+      path.setAttribute("stroke-width", (w * 1.5).toFixed(2));
+      path.classList.add("tube-body");
+      var hi = mk("tube-hi", 0.45);
+      path.parentNode.insertBefore(hi, path.nextSibling);
+    });
+    /* Depth: nearer rings (front of the tunnel) larger + brighter, farther dimmer. */
+    var depthOf = function (k) { return nL > 1 ? k / (nL - 1) : 0; };
+    layers.forEach(function (el, k) {
+      var d = depthOf(k);
+      el.dataset.depth = d.toFixed(3);
+      if (d > 0.66) el.classList.add("far");
+    });
     var ringEls = gsap.utils.toArray(".cyc-rings > .cl");
     var ringCols = ringEls.map(function (el, i) {
       var m = (getComputedStyle(el).getPropertyValue("--ring") || "").match(/hsl\(\s*([\d.]+)[ ,]+([\d.]+)%[ ,]+([\d.]+)%/);
@@ -250,7 +280,10 @@
           }
         }
       }
-      for (var q = 0; q < nL; q++) layers[q].style.opacity = fade.toFixed(3);
+      for (var q = 0; q < nL; q++) {
+        var dq = depthOf(q);
+        layers[q].style.opacity = (fade * (1 - 0.5 * dq)).toFixed(3);
+      }
       if (spir) spir.forEach(function (el, i) { el.style.opacity = ((0.35 + 0.65 * u) * fade).toFixed(3); });
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
     };

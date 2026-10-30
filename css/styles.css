@@ -748,3 +748,12 @@ main, section, .hero, .mask-section, .mask-sticky, .story-scrub, .story-pin, .pi
 .cf > .fo:nth-child(8) { --ring: hsl(338 88% 66%); }
 .cf > .fo:nth-child(9) { --ring: hsl(1 87% 63%); }
 .cf > .fo:nth-child(10) { --ring: hsl(39 90% 60%); }
+
+/* Cycles 3D tubes: shadow/inner edge, glow halo, highlight */
+.cl path.tube-halo { stroke: var(--ring, #5ee1ff); stroke-opacity: 0.12; }
+.cl path.tube-shade { stroke: #020510; stroke-opacity: 0.6; }
+.cl.cr path.tube-body { opacity: 0.85; }
+.cl path.tube-hi { stroke: #fff; stroke-opacity: 0.55; transform: translate(-1.6px, -1.6px); }
+.cl.cr path.tube-halo, .cl.cr path.tube-shade, .cl.cr path.tube-hi { opacity: 1; }
+.cl.far svg { filter: blur(0.8px); }
+@media (max-width: 900px), (prefers-reduced-motion: reduce) { .cl.far svg { filter: none; } }
