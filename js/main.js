@@ -178,125 +178,156 @@
     }
   });
 
-  /* Cycles: expanding rings — one continuous scrubbed progress drives
-     scale (exponential = even-feeling zoom), rotation and drift together.
-     Coil stays the restored circle: radius 30%, about 3.5 turns (k * 0.55).
-     Zoom runs from that opening size into the outer edge, where the waves
-     shed off the screen. The spiral's center drifts linearly to the
-     bottom-right corner and arrives there as the zoom finishes.
-     Rings stay whole circles (no clip) and leave upward on the handoff. */
+  /* Cycles: wavy-circle spiral rendered in ONE <canvas> by ONE rAF loop.
+     Scroll is read once per frame and eased (no scroll-handler work, no SVG
+     style writes). Same motion as before: exponential zoom, center drifting to
+     the bottom-right, coil translate + depth, per-ring spin + breathing,
+     colorful → SIVYIS blue shift, fade to ~30%. Tube look = shadow stroke +
+     body stroke + offset highlight stroke. Depth = size + alpha (no blur). */
   var cr = document.querySelector(".cyc-rings");
-  if (cr) {
-    var setR = gsap.quickSetter(cr, "css");
-    var frac = document.querySelector(".cf");
-    var layers = gsap.utils.toArray(".cl.cr");
-    var nL = layers.length;
-    var spir = gsap.utils.toArray(".cl.cs");
-    var prog = { p: 0 };
-    var stick = document.querySelector(".cyc-stick");
-    var end = { x: 50, y: 50 };
-    var measureEnd = function () {
-      var ringW = cr.offsetWidth || 1;
-      var ringH = cr.offsetHeight || 1;
-      var stickW = stick ? stick.offsetWidth : (window.innerWidth || ringW);
-      var stickH = stick ? stick.offsetHeight : (window.innerHeight || ringH);
-      end.x = (stickW * 0.5) / ringW * 100;
-      end.y = (stickH * 0.5) / ringH * 100;
-    };
-    measureEnd();
-    window.addEventListener("resize", measureEnd);
-    /* Ring colors: read each ring's starting hue, ease toward the SIVYIS blues
-       (--cy #5ee1ff ≈ hsl 191, deepening to hsl 222) along the shortest hue path,
-       keeping saturation high so the blend never passes through gray. */
-    /* 3D tube look: each ring path gets a dark wide underlay (inner edge + soft
-       shadow), a faint colored halo (glow) and an offset thin highlight on top.
-       Built once; all three follow --ring / opacity, so no per-frame work. */
-    var NS = "http://www.w3.org/2000/svg";
-    gsap.utils.toArray(".cyc-rings > .cl path").forEach(function (path) {
-      if (path.dataset.tube) return;
-      path.dataset.tube = "1";
-      var w = parseFloat(path.getAttribute("stroke-width")) || parseFloat(getComputedStyle(path).strokeWidth) || 1.2;
-      var mk = function (cls, sw) {
-        var c = path.cloneNode(false);
-        c.removeAttribute("stroke-opacity");
-        c.setAttribute("class", cls);
-        c.setAttribute("stroke-width", (w * sw).toFixed(2));
-        c.dataset.tube = "1";
-        return c;
+  var stick = document.querySelector(".cyc-stick");
+  var cycSec = document.getElementById("cycles");
+  if (cr && stick && cycSec) {
+    var frac = cr.querySelector(".cf");
+    var ringNodes = Array.prototype.slice.call(cr.querySelectorAll(":scope > .cl"));
+    var rings = ringNodes.map(function (el, i) {
+      var cs = getComputedStyle(el);
+      var m = (cs.getPropertyValue("--ring") || "").match(/hsl\(\s*([\d.]+)[ ,]+([\d.]+)%[ ,]+([\d.]+)%/);
+      var path = el.querySelector("path");
+      var nums = (path.getAttribute("d").match(/-?[\d.]+/g) || []).map(Number), rMin = 1e9, rMax = 0;
+      for (var q = 0; q + 1 < nums.length; q += 2) { var rr = Math.hypot(nums[q] - 500, nums[q + 1] - 500); if (rr < rMin) rMin = rr; if (rr > rMax) rMax = rr; }
+      return {
+        rMin: rMin, rMax: rMax,
+        spiral: el.classList.contains("cs"),
+        path: new Path2D(path.getAttribute("d")),
+        w: parseFloat(path.getAttribute("stroke-width")) || 1.2,
+        a: (parseFloat(path.getAttribute("opacity")) || 1) * (el.classList.contains("cr") ? 0.72 : 1),
+        spin: (el.classList.contains("rev") ? -1 : 1) * 2 * Math.PI / (parseFloat(cs.getPropertyValue("--d")) || 60),
+        breath: parseFloat(cs.getPropertyValue("--b")) || 5,
+        z: parseFloat(cs.getPropertyValue("--z")) || 0,
+        h: m ? +m[1] : 195, s: m ? +m[2] : 90, l: m ? +m[3] : 65
       };
-      path.parentNode.insertBefore(mk("tube-halo", 4.2), path);
-      path.parentNode.insertBefore(mk("tube-shade", 2.1), path);
-      path.setAttribute("stroke-width", (w * 1.5).toFixed(2));
-      path.classList.add("tube-body");
-      var hi = mk("tube-hi", 0.45);
-      path.parentNode.insertBefore(hi, path.nextSibling);
     });
-    /* Depth: nearer rings (front of the tunnel) larger + brighter, farther dimmer. */
-    var depthOf = function (k) { return nL > 1 ? k / (nL - 1) : 0; };
-    layers.forEach(function (el, k) {
-      var d = depthOf(k);
-      el.dataset.depth = d.toFixed(3);
-      if (d > 0.66) el.classList.add("far");
+    var nR = rings.filter(function (r) { return !r.spiral; }).length;
+    var ri = 0;
+    rings.forEach(function (r) {
+      if (!r.spiral) r.k = ri++;
+      var t = nR > 1 ? (r.k || 0) / (nR - 1) : 0;
+      r.th = 191 + 31 * t; r.tl = 66 - 6 * t;
     });
-    var ringEls = gsap.utils.toArray(".cyc-rings > .cl");
-    var ringCols = ringEls.map(function (el, i) {
-      var m = (getComputedStyle(el).getPropertyValue("--ring") || "").match(/hsl\(\s*([\d.]+)[ ,]+([\d.]+)%[ ,]+([\d.]+)%/);
-      if (!m) return null;
-      var t = ringEls.length > 1 ? i / (ringEls.length - 1) : 0;
-      return { el: el, h: +m[1], s: +m[2], l: +m[3], th: 191 + 31 * t, ts: 92, tl: 66 - 6 * t };
-    });
-    var lastF = -1;
-    var apply = function () {
-      var p = prog.p;
+    ringNodes.forEach(function (el) { el.remove(); });
+
+    var cv = document.createElement("canvas");
+    cv.className = "cyc-canvas";
+    cv.setAttribute("aria-hidden", "true");
+    stick.insertBefore(cv, stick.firstChild);
+    var ctx = cv.getContext("2d", { alpha: true });
+    var W = 0, H = 0, DPR = 1, VM = 1;
+    var mobile = window.matchMedia("(max-width: 900px)").matches;
+    var size = function () {
+      DPR = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
+      W = stick.clientWidth || window.innerWidth; H = stick.clientHeight || window.innerHeight;
+      VM = Math.min(window.innerWidth, window.innerHeight);
+      cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+      cv.style.width = W + "px"; cv.style.height = H + "px";
+    };
+    size();
+    window.addEventListener("resize", function () { mobile = window.matchMedia("(max-width: 900px)").matches; size(); });
+
+    var target = 0, sp = 0, lastT = 0, visible = true, lastFrac = -1, lastCr = "";
+    var readTarget = function () {
+      var r = cycSec.getBoundingClientRect(), vh = window.innerHeight;
+      var a = vh * 0.85, b = vh - r.height;   /* start "top 85%", end "bottom bottom" */
+      return Math.min(1, Math.max(0, (a - r.top) / (a - b || 1)));
+    };
+    sp = target = readTarget();
+    var PERSP = 900;
+
+    var draw = function (now) {
+      var p = sp, tSec = now / 1000;
       var sc = 0.28 * Math.pow(6 / 0.28, p);
-      /* Spiral opening: large circular helix into depth, unwinding into a straight tunnel */
       var u = Math.max(0, 1 - p / 0.9); u = u * u * (3 - 2 * u);
-      setR({
-        scale: sc,
-        rotation: 330 * p,
-        rotationX: 22 - 14 * p,
-        rotationY: -12 + 20 * p,
-        xPercent: end.x * p,
-        yPercent: end.y * p,
-        force3D: true
-      });
-      for (var k = 0; k < nL; k++) {
-        /* Big coil-circle: equal large radius, more angular travel = longer helix path */
-        var a = k * 0.55 + p * 3.2, rad = 30 * (0.28 + 0.72 * u);
-        layers[k].style.translate = (Math.cos(a) * rad).toFixed(2) + "% " + (Math.sin(a) * rad).toFixed(2) + "% " + ((nL / 2 - k) * (12 + 14 * u)).toFixed(1) + "px";
-      }
-      /* Fade + blue shift as the rings grow into the background (smoothstep on p). */
       var f = Math.min(1, Math.max(0, (p - 0.08) / 0.82)); f = f * f * (3 - 2 * f);
       var fade = 1 - 0.7 * f;
-      if (Math.abs(f - lastF) > 0.0015 || f === 0 || f === 1) {
-        if (f !== lastF) {
-          lastF = f;
-          for (var j = 0; j < ringCols.length; j++) {
-            var c = ringCols[j];
-            if (!c) continue;
-            var dh = ((c.th - c.h + 540) % 360) - 180;
-            var hh = (c.h + dh * f + 360) % 360;
-            c.el.style.setProperty("--ring", "hsl(" + hh.toFixed(1) + " " + (c.s + (c.ts - c.s) * f).toFixed(1) + "% " + (c.l + (c.tl - c.l) * f).toFixed(1) + "%)");
-          }
+      var rot = (330 * p) * Math.PI / 180;
+      var tiltX = Math.cos((22 - 14 * p) * Math.PI / 180), tiltY = Math.cos((-12 + 20 * p) * Math.PI / 180);
+      /* drift: container moves by end.{x,y}% of its own size → stick center lands at bottom-right */
+      var cx = W / 2 + (W / 2) * p, cy = H / 2 + (H / 2) * p;
+      var unit = VM / 1000; /* svg viewBox → px at scale 1 */
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.lineJoin = "round"; ctx.lineCap = "round";
+      /* draw far → near so nearer rings sit on top */
+      for (var i = rings.length - 1; i >= 0; i--) {
+        var R = rings[i];
+        var zLocal, ox = 0, oy = 0;
+        if (R.spiral) { zLocal = R.z; }
+        else {
+          var a = R.k * 0.55 + p * 3.2, rad = 30 * (0.28 + 0.72 * u);
+          ox = Math.cos(a) * rad / 100 * VM; oy = Math.sin(a) * rad / 100 * VM;
+          zLocal = (nR / 2 - R.k) * (12 + 14 * u);
         }
+        var zEff = zLocal * sc;
+        if (zEff > PERSP * 0.9) continue;
+        var persp = PERSP / (PERSP - zEff);
+        var br = 1 + 0.02 * Math.sin(tSec * 2 * Math.PI / (2 * R.breath) + i);
+        var depth = R.spiral ? 0.5 : R.k / Math.max(1, nR - 1); /* 0 near … 1 far */
+        var alpha = R.a * fade * (1 - 0.5 * depth) * (R.spiral ? (0.35 + 0.65 * u) : 1);
+        if (alpha < 0.01) continue;
+        var s = sc * persp * br * unit;
+        /* place: container rotate → layer offset → spin */
+        var lx = ox * sc, ly = oy * sc;
+        var cr0 = Math.cos(rot), sr0 = Math.sin(rot);
+        var px = cx + (lx * cr0 - ly * sr0) * persp * tiltY, py = cy + (lx * sr0 + ly * cr0) * persp * tiltX;
+        var ang = rot + R.spin * tSec;
+        var ca = Math.cos(ang) * s, sa = Math.sin(ang) * s;
+        /* cull: ring annulus misses the viewport entirely */
+        var dx = Math.max(0, Math.abs(px - W / 2) - W / 2), dy = Math.max(0, Math.abs(py - H / 2) - H / 2);
+        var near = Math.hypot(dx, dy);
+        var far = Math.hypot(Math.max(px, W - px), Math.max(py, H - py));
+        var lw = R.w * 2.1 * s;
+        if (R.rMax * s + lw < near || R.rMin * s - lw > far) continue;
+        ctx.setTransform(DPR * ca * tiltY, DPR * sa * tiltX, -DPR * sa * tiltY, DPR * ca * tiltX, DPR * px, DPR * py);
+        ctx.translate(-500, -500);
+        var dh = ((R.th - R.h + 540) % 360) - 180;
+        var hh = (R.h + dh * f + 360) % 360, ss = R.s + (92 - R.s) * f, ll = R.l + (R.tl - R.l) * f;
+        /* tube: dark shadow/inner edge → body → offset highlight */
+        ctx.globalAlpha = alpha * 0.55;
+        ctx.strokeStyle = "#020510"; ctx.lineWidth = R.w * 2.1; ctx.stroke(R.path);
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = "hsl(" + hh.toFixed(1) + "," + ss.toFixed(1) + "%," + ll.toFixed(1) + "%)";
+        ctx.lineWidth = R.w * 1.4; ctx.stroke(R.path);
+        ctx.globalAlpha = alpha * 0.5;
+        ctx.strokeStyle = "#fff"; ctx.lineWidth = R.w * 0.4;
+        ctx.translate(-1.6 / (s || 1), -1.6 / (s || 1)); ctx.stroke(R.path);
       }
-      for (var q = 0; q < nL; q++) {
-        var dq = depthOf(q);
-        layers[q].style.opacity = (fade * (1 - 0.5 * dq)).toFixed(3);
+      ctx.globalAlpha = 1;
+      /* fractal layer keeps its DOM/SVG; one transform write, only when changed */
+      if (frac) {
+        var fo = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
+        if (Math.abs(fo - lastFrac) > 0.004) { frac.style.opacity = fo.toFixed(3); lastFrac = fo; }
+        var tr = fo > 0 ? "translate(" + (50 * p).toFixed(2) + "vw," + (50 * p).toFixed(2) + "vh) scale(" + sc.toFixed(4) + ") rotate(" + (330 * p).toFixed(2) + "deg)" : "scale(0.28)";
+        if (tr !== lastCr) { cr.style.transform = tr; lastCr = tr; }
       }
-      if (spir) spir.forEach(function (el, i) { el.style.opacity = ((0.35 + 0.65 * u) * fade).toFixed(3); });
-      if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
     };
-    apply();
-    window.addEventListener("load", function () { measureEnd(); apply(); });
-    gsap.to(prog, { p: 1, ease: "none", onUpdate: apply,
-      scrollTrigger: {
-        trigger: "#cycles",
-        start: "top 85%",
-        end: "bottom bottom",
-        scrub: 1.4,
-        onRefresh: function () { measureEnd(); apply(); }
-      } });
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) kick(); }, { rootMargin: "200px 0px" }).observe(cycSec);
+    }
+    var running = false;
+    var loop = function (now) {
+      if (!visible) { running = false; return; }
+      var dt = lastT ? Math.min(0.1, (now - lastT) / 1000) : 0.016; lastT = now;
+      target = readTarget();
+      sp += (target - sp) * (1 - Math.exp(-dt / 0.12));
+      if (Math.abs(target - sp) < 0.0002) sp = target;
+      draw(now);
+      requestAnimationFrame(loop);
+    };
+    var kick = function () { if (!running) { running = true; lastT = 0; requestAnimationFrame(loop); } };
+    if (reduce) { draw(0); window.addEventListener("scroll", function () { sp = readTarget(); requestAnimationFrame(function () { draw(0); }); }, { passive: true }); }
+    else kick();
   }
 
   /* Seam: background hue shifts, then the mirror-textile glow takes the handoff.
