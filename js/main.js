@@ -205,6 +205,17 @@
     };
     measureEnd();
     window.addEventListener("resize", measureEnd);
+    /* Ring colors: read each ring's starting hue, ease toward the SIVYIS blues
+       (--cy #5ee1ff ≈ hsl 191, deepening to hsl 222) along the shortest hue path,
+       keeping saturation high so the blend never passes through gray. */
+    var ringEls = gsap.utils.toArray(".cyc-rings > .cl");
+    var ringCols = ringEls.map(function (el, i) {
+      var m = (getComputedStyle(el).getPropertyValue("--ring") || "").match(/hsl\(\s*([\d.]+)[ ,]+([\d.]+)%[ ,]+([\d.]+)%/);
+      if (!m) return null;
+      var t = ringEls.length > 1 ? i / (ringEls.length - 1) : 0;
+      return { el: el, h: +m[1], s: +m[2], l: +m[3], th: 191 + 31 * t, ts: 92, tl: 66 - 6 * t };
+    });
+    var lastF = -1;
     var apply = function () {
       var p = prog.p;
       var sc = 0.28 * Math.pow(6 / 0.28, p);
@@ -224,7 +235,23 @@
         var a = k * 0.55 + p * 3.2, rad = 30 * (0.28 + 0.72 * u);
         layers[k].style.translate = (Math.cos(a) * rad).toFixed(2) + "% " + (Math.sin(a) * rad).toFixed(2) + "% " + ((nL / 2 - k) * (12 + 14 * u)).toFixed(1) + "px";
       }
-      if (spir) spir.forEach(function (el, i) { el.style.opacity = (0.35 + 0.65 * u).toFixed(3); });
+      /* Fade + blue shift as the rings grow into the background (smoothstep on p). */
+      var f = Math.min(1, Math.max(0, (p - 0.08) / 0.82)); f = f * f * (3 - 2 * f);
+      var fade = 1 - 0.7 * f;
+      if (Math.abs(f - lastF) > 0.0015 || f === 0 || f === 1) {
+        if (f !== lastF) {
+          lastF = f;
+          for (var j = 0; j < ringCols.length; j++) {
+            var c = ringCols[j];
+            if (!c) continue;
+            var dh = ((c.th - c.h + 540) % 360) - 180;
+            var hh = (c.h + dh * f + 360) % 360;
+            c.el.style.setProperty("--ring", "hsl(" + hh.toFixed(1) + " " + (c.s + (c.ts - c.s) * f).toFixed(1) + "% " + (c.l + (c.tl - c.l) * f).toFixed(1) + "%)");
+          }
+        }
+      }
+      for (var q = 0; q < nL; q++) layers[q].style.opacity = fade.toFixed(3);
+      if (spir) spir.forEach(function (el, i) { el.style.opacity = ((0.35 + 0.65 * u) * fade).toFixed(3); });
       if (frac) frac.style.opacity = Math.min(1, Math.max(0, (p - 0.6) / 0.25));
     };
     apply();
